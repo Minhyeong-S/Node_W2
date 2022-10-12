@@ -78,13 +78,14 @@ commentRouter.delete("/:commentId", authMiddleware, async (req, res) => {
 commentRouter.put("/:commentId", authMiddleware, async (req, res) => {
   try {
     const { commentId } = req.params;
+    const { comment } = req.body;
     const { user } = res.locals;
-    const comment = await Comment.findByPk(commentId);
-    if (!comment)
+    const isComment = await Comment.findByPk(commentId);
+    if (!isComment)
       return res
         .status(400)
         .send({ errorMessage: "존재하지 않는 댓글입니다." });
-    if (comment.userId !== user.userId)
+    if (isComment.userId !== user.userId)
       return res
         .status(400)
         .send({ errorMessage: "작성자 본인만 수정할 수 있습니다." });
