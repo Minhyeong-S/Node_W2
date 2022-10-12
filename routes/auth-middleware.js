@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 require("dotenv").config();
 const { SECRET_KEY } = process.env;
+if (!SECRET_KEY) throw new Error("SECRET_KEY is required!!");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;

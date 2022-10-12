@@ -1,5 +1,9 @@
 require("dotenv").config();
 const env = process.env;
+if (!env.MYSQL_USERNAME) throw new Error("MYSQL_USERNAME is required!!");
+if (!env.MYSQL_PASSWORD) throw new Error("MYSQL_PASSWORD is required!!");
+if (!env.MYSQL_DATABASE) throw new Error("MYSQL_DATABASE is required!!");
+if (!env.MYSQL_HOST) throw new Error("MYSQL_HOST is required!!");
 
 const development = {
   username: env.MYSQL_USERNAME,

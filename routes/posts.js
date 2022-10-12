@@ -151,9 +151,7 @@ postRouter.get("/like", authMiddleware, async (req, res) => {
       order: [["likesCount", "DESC"]],
     });
     const likesPost = await allPost.filter(
-      (v) =>
-        v.likesCount > 0 &&
-        v.Likes.filter((v2) => v2.userId === user.userId).length > 0
+      (v) => v.Likes.filter((v2) => v2.userId === user.userId).length > 0
     );
     // .sort((a, b) => {
     //   return b.likesCount - a.likesCount;
