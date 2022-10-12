@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const postRouter = Router();
 const authMiddleware = require("./auth-middleware");
-const { User, Post, Comment, Likes } = require("../models");
+const { User, Post, Likes } = require("../models");
 
 // 전체 게시글 목록
 postRouter.get("/", async (req, res) => {
@@ -17,8 +17,8 @@ postRouter.get("/", async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
     return res.send({ posts });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error(err);
     return res.status(500).send({ errorMessage: err.message });
   }
 });
@@ -39,7 +39,7 @@ postRouter.get("/:postId", async (req, res, next) => {
 
     return res.send({ post });
   } catch (error) {
-    console.log(error);
+    console.error(err);
     return res.status(500).send({ errorMessage: err.message });
   }
 });
@@ -48,15 +48,17 @@ postRouter.get("/:postId", async (req, res, next) => {
 postRouter.post("/", authMiddleware, async (req, res) => {
   try {
     const { title, content } = req.body;
-    if (!title) return res.status(400).send({ err: "title is required" });
-    if (!content) return res.status(400).send({ err: "content is required" });
+    if (!title)
+      return res.status(400).send({ errorMessage: "title is required" });
+    if (!content)
+      return res.status(400).send({ errorMessage: "content is required" });
 
     const { user } = res.locals;
     await Post.create({ userId: user.userId, title, content });
     return res.status(200).send({ msg: "게시글이 작성되었습니다." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 
@@ -77,9 +79,9 @@ postRouter.delete("/:postId", authMiddleware, async (req, res) => {
 
     await Post.destroy({ where: { postId } });
     return res.status(200).send({ msg: "게시글이 삭제되었습니다." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 
@@ -89,8 +91,10 @@ postRouter.put("/:postId", authMiddleware, async (req, res) => {
     const { postId } = req.params;
     const { user } = res.locals;
     const { title, content } = req.body;
-    if (!title) return res.status(400).send({ err: "title is required" });
-    if (!content) return res.status(400).send({ err: "content is required" });
+    if (!title)
+      return res.status(400).send({ errorMessage: "title is required" });
+    if (!content)
+      return res.status(400).send({ errorMessage: "content is required" });
 
     const post = await Post.findByPk(postId);
     if (!post)
@@ -104,9 +108,9 @@ postRouter.put("/:postId", authMiddleware, async (req, res) => {
 
     await Post.update({ title, content }, { where: { postId } });
     return res.status(200).send({ msg: "게시글이 수정되었습니다." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 
@@ -135,9 +139,9 @@ postRouter.post("/:postId/like", authMiddleware, async (req, res) => {
       await Post.decrement({ likesCount: 1 }, { where: { postId } });
       return res.status(200).send({ msg: "좋아요를 취소하였습니다." });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 
@@ -158,9 +162,9 @@ postRouter.get("/like", authMiddleware, async (req, res) => {
     // });
 
     return res.status(200).send(likesPost);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 

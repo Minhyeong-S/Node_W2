@@ -1,9 +1,7 @@
-const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize");
 const Joi = require("joi");
 const { Router } = require("express");
 const signupRouter = Router();
-const { User, Post, Comment } = require("../models");
+const { User } = require("../models");
 
 // 회원가입
 signupRouter.post("/", async (req, res) => {
@@ -31,8 +29,8 @@ signupRouter.post("/", async (req, res) => {
 
   try {
     Joi.assert(nickname, nickSchema);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error(err);
     res.status(400).send({
       errorMessage:
         "닉네임은 최소 3자 이상, 알파벳 대소문자, 숫자로 구성되어야 합니다.",

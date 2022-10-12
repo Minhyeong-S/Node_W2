@@ -1,11 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize");
-const Joi = require("joi");
 const { Router } = require("express");
 const loginRouter = Router();
 const { User, Post, Comment } = require("../models");
 require("dotenv").config();
-const { SECRET_KEY } = process.env;
 
 // 로그인
 loginRouter.post("/", async (req, res) => {
@@ -29,6 +26,7 @@ loginRouter.post("/", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 

@@ -1,8 +1,6 @@
 const express = require("express");
 const app = express();
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const { Op } = require("sequelize");
 const { indexRouter } = require("./routes/index");
 require("dotenv").config();
 

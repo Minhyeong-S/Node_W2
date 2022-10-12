@@ -26,20 +26,18 @@ commentRouter.get("/:postId", async (req, res) => {
 
 // 특정 포스트에 댓글 작성. 로그인 필요 => authMiddleware 경유
 commentRouter.post("/:postId", authMiddleware, async (req, res) => {
+  const { postId } = req.params;
+  const isPostId = await Post.findByPk(postId);
+  if (!isPostId)
+    return res
+      .status(400)
+      .send({ errorMessage: "게시글이 존재하지 않습니다." });
+
+  const { comment } = req.body;
+  if (!comment)
+    return res.status(400).send({ errorMessage: "댓글 내용을 입력해주세요." });
+
   try {
-    const { postId } = req.params;
-    const isPostId = await Post.findByPk(postId);
-    if (!isPostId)
-      return res
-        .status(400)
-        .send({ errorMessage: "게시글이 존재하지 않습니다." });
-
-    const { comment } = req.body;
-    if (!comment)
-      return res
-        .status(400)
-        .send({ errorMessage: "댓글 내용을 입력해주세요." });
-
     const { user } = res.locals;
     await Comment.create({
       userId: user.userId,
